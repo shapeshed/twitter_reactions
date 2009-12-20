@@ -5,6 +5,7 @@
   "background_page": "background.html",
   "browser_action": {
     "default_icon": "images/icons/icon.png",
+    "default_title": "Get Twitter reactions to this page",
     "popup": "popup.html"
   },
   "permissions": [
