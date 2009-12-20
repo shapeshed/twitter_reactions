@@ -1,0 +1,17 @@
+{
+  "name": "Twitter Reactions",
+  "version": "0.1.0",
+  "description": "Shows the latest Twitter reactions for the browser web page",
+  "background_page": "background.html",
+  "browser_action": {
+    "default_icon": "images/icons/icon.png",
+    "popup": "popup.html"
+  },
+  "permissions": [
+    "http://search.twitter.com/",
+    "tabs"
+  ],
+  "icons": {
+      "128": "images/icons/icon_128.png"
+    }
+}

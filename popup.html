@@ -1,0 +1,80 @@
+<style>
+body {
+  min-width:470px;
+  overflow-x:hidden;
+  font-family: helvetica;
+  color: #333;
+}
+ul {
+  width: 450px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+}
+li {
+  margin: 0;
+  width: 440px;
+  padding: 10px 10px 10px 0;
+  float: left;
+  clear: left;
+  border-top: 1px dotted #ccc;
+}
+
+img {
+  padding: 5px;
+  margin: 0 10px 0 0;
+  -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+  -webkit-border-radius: 5px;
+  float: left;
+  width: 48px;
+  height: 48px;
+}
+img#ajax-loader
+  {
+  -webkit-box-shadow: none;
+  -webkit-border-radius: none;
+  width: 36px;
+  height: 36px;
+}
+</style>
+<div id="tweets">
+  <img src="images/ajax_loader.gif" alt="Ajax Loader Image" id="ajax-loader" />
+</div>
+
+<script>
+
+  function removeElement(id) {
+    var element = document.getElementById(id);
+    element.parentNode.removeChild(element);
+  }
+
+  chrome.tabs.getSelected(null, function(tab) {
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://search.twitter.com/search.json?&q=" + tab.url, true);
+    xhr.send();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4) {
+        removeElement('ajax-loader');
+        tweetList = document.createElement('ul');
+        var resp = JSON.parse(xhr.responseText);
+        for (var i=0; i < resp.results.length; i++) {
+          newListItem = document.createElement('li');
+          newImage = document.createElement('img');
+          newImage.setAttribute("src", resp.results[i].profile_image_url);
+          newAuthor = document.createElement('a');
+          newAuthor.setAttribute("href", 'http://twitter.com' +  resp.results[i].from_user);
+          newAuthorText = document.createTextNode(resp.results[i].from_user);
+          newAuthor.appendChild(newAuthorText);
+          newText = document.createTextNode(' ' + resp.results[i].text);
+          newListItem.appendChild(newAuthor);
+          newListItem.appendChild(newImage);
+          newListItem.appendChild(newText);
+          tweetList.appendChild(newListItem);
+          document.getElementById('tweets').appendChild(tweetList);
+        };
+      }
+    }
+  });
+</script>
