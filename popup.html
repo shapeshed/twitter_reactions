@@ -43,31 +43,75 @@ img#ajax-loader
 </div>
 
 <script>
+  function removeHTMLTags(text) {
+  	var strInputCode = text;
+  	/*
+  	This line is optional, it replaces escaped brackets with real ones,
+  	i.e. < is replaced with < and > is replaced with >
+  	*/
+  	strInputCode = strInputCode.replace(/&(lt|gt);/g, function (strMatch, p1) {
+  		return (p1 == "lt")? "<" : ">";
+  	});
+ 
+  	var strTagStrippedText = strInputCode.replace(/<\/?[^>]+(>|$)/g, "");
+  	//alert(”Output text:\n” + strTagStrippedText);
+  	// Use the alert below if you want to show the input and the output text
+  	// alert(”Input code:\n” + strInputCode + “\n\nOutput text:\n” + strTagStrippedText);
+  	return strTagStrippedText;
+  }
 
   function removeElement(id) {
     var element = document.getElementById(id);
     element.parentNode.removeChild(element);
   }
 
+  // chrome.tabs.getSelected(null, function(tab) {
+  //   
+  //   var xhr = new XMLHttpRequest();
+  //   xhr.open("GET", "http://search.twitter.com/search.json?&q=" + tab.url, true);
+  //   xhr.send();
+  //   xhr.onreadystatechange = function() {
+  //     if (xhr.readyState == 4) {
+  //       removeElement('ajax-loader');
+  //       tweetList = document.createElement('ul');
+  //       var resp = JSON.parse(xhr.responseText);
+  //       for (var i=0; i < resp.results.length; i++) {
+  //         newListItem = document.createElement('li');
+  //         newImage = document.createElement('img');
+  //         newImage.setAttribute("src", resp.results[i].profile_image_url);
+  //         newAuthor = document.createElement('a');
+  //         newAuthor.setAttribute("href", 'http://twitter.com' +  resp.results[i].from_user);
+  //         newAuthorText = document.createTextNode(resp.results[i].from_user);
+  //         newAuthor.appendChild(newAuthorText);
+  //         newText = document.createTextNode(' ' + resp.results[i].text);
+  //         newListItem.appendChild(newAuthor);
+  //         newListItem.appendChild(newImage);
+  //         newListItem.appendChild(newText);
+  //         tweetList.appendChild(newListItem);
+  //         document.getElementById('tweets').appendChild(tweetList);
+  //       };
+  //     }
+  //   }
+  // });
   chrome.tabs.getSelected(null, function(tab) {
     
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://search.twitter.com/search.json?&q=" + tab.url, true);
+    xhr.open("GET", "http://backtweets.com/search.json?key=a25c535a828005b2ff05&q=" + escape(tab.url), true);
     xhr.send();
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
         removeElement('ajax-loader');
         tweetList = document.createElement('ul');
         var resp = JSON.parse(xhr.responseText);
-        for (var i=0; i < resp.results.length; i++) {
+        for (var i=0; i < resp.tweets.length; i++) {
           newListItem = document.createElement('li');
           newImage = document.createElement('img');
-          newImage.setAttribute("src", resp.results[i].profile_image_url);
+          newImage.setAttribute("src", resp.tweets[i].tweet_profile_image_url);
           newAuthor = document.createElement('a');
-          newAuthor.setAttribute("href", 'http://twitter.com' +  resp.results[i].from_user);
-          newAuthorText = document.createTextNode(resp.results[i].from_user);
+          newAuthor.setAttribute("href", 'http://twitter.com' +  resp.tweets[i].tweet_from_user);
+          newAuthorText = document.createTextNode(resp.tweets[i].tweet_from_user);
           newAuthor.appendChild(newAuthorText);
-          newText = document.createTextNode(' ' + resp.results[i].text);
+          newText = document.createTextNode(' ' + removeHTMLTags(resp.tweets[i].tweet_text));
           newListItem.appendChild(newAuthor);
           newListItem.appendChild(newImage);
           newListItem.appendChild(newText);

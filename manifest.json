@@ -9,10 +9,11 @@
     "popup": "popup.html"
   },
   "permissions": [
-    "http://search.twitter.com/",
+    "http://backtweets.com/",
     "tabs"
   ],
   "icons": {
       "128": "images/icons/icon_128.png"
     }
 }
+
