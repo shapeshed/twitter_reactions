@@ -1,0 +1,16 @@
+== Twitter Reactions Google Chrome Extension
+
+The Twitter Reactions Google Chrome Extension allows you to instantly view Twitter reactions for the web page you are viewing in Google Chrome.
+
+== Installation
+
+The extension can be installed in the standard way from 
+https://chrome.google.com/extensions/detail/ebipjbfcgphjbnkhbijmnpnpcgjolked
+
+== Usage
+
+Once installed to view reactions on Twitter for the current web page click on the icon. This will launch a popup that will show the latest Tweets for the page. 
+
+== Bugs, Issues & Feature Requests
+
+These can be logged at 
