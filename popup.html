@@ -1,24 +1,56 @@
 <style>
+/* Reset
+Eric Meyer's Reset - http://meyerweb.com/eric/thoughts/2008/01/15/resetting-again/
+-----------------------------------------------------------------------------*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+
+
 body {
   min-width:470px;
   overflow-x:hidden;
-  font-family: helvetica;
+  font: 75%/1.5  Helvetica, Arial, "Lucida Grande", "Lucida Sans", Tahoma, Verdana, sans-serif;
   color: #333;
+  text-align:left;
+  margin: 5px;
+  }
 }
 ul {
   width: 450px;
   list-style: none;
-  margin: 0;
-  padding: 0;
 
 }
 li {
-  margin: 0;
   width: 440px;
   padding: 10px 10px 10px 0;
   float: left;
   clear: left;
   border-top: 1px dotted #ccc;
+}
+li span a
+  {
+  color: #999999;
+  text-decoration: none;
+}
+li span a:hover
+  {
+  color: #999999;
+  text-decoration: underline;
 }
 
 img {
@@ -64,7 +96,7 @@ img#ajax-loader
     var element = document.getElementById(id);
     element.parentNode.removeChild(element);
   }
-
+  
   // chrome.tabs.getSelected(null, function(tab) {
   //   
   //   var xhr = new XMLHttpRequest();
@@ -94,7 +126,6 @@ img#ajax-loader
   //   }
   // });
   chrome.tabs.getSelected(null, function(tab) {
-    
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "http://backtweets.com/search.json?key=a25c535a828005b2ff05&q=" + escape(tab.url), true);
     xhr.send();
@@ -108,13 +139,22 @@ img#ajax-loader
           newImage = document.createElement('img');
           newImage.setAttribute("src", resp.tweets[i].tweet_profile_image_url);
           newAuthor = document.createElement('a');
-          newAuthor.setAttribute("href", 'http://twitter.com' +  resp.tweets[i].tweet_from_user);
+          newAuthor.setAttribute("href", 'http://twitter.com/' +  resp.tweets[i].tweet_from_user);
+          newAuthor.setAttribute("target", '_blank');
           newAuthorText = document.createTextNode(resp.tweets[i].tweet_from_user);
           newAuthor.appendChild(newAuthorText);
           newText = document.createTextNode(' ' + removeHTMLTags(resp.tweets[i].tweet_text));
           newListItem.appendChild(newAuthor);
+          newPermalink = document.createElement('a');
+          newPermalink.setAttribute("href", 'http://twitter.com/' +  resp.tweets[i].tweet_from_user + '/status/' + resp.tweets[i].tweet_id);
+          newPermalink.setAttribute("target", '_blank');
+          newDate = document.createTextNode(' ' + removeHTMLTags(resp.tweets[i].tweet_created_at));
+          newPermalink.appendChild(newDate);          
+          newSpan = document.createElement('span');
+          newSpan.appendChild(newPermalink);
           newListItem.appendChild(newImage);
           newListItem.appendChild(newText);
+          newListItem.appendChild(newSpan);
           tweetList.appendChild(newListItem);
           document.getElementById('tweets').appendChild(tweetList);
         };
